@@ -1,0 +1,5 @@
+﻿  AlgorithmStudy.cpp
+D:\StudyDir\AlgorithmStudy\AlgorithmStudy\AlgorithmStudy.cpp(35,27): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+D:\StudyDir\AlgorithmStudy\AlgorithmStudy\AlgorithmStudy.cpp(54,23): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+D:\StudyDir\AlgorithmStudy\AlgorithmStudy\AlgorithmStudy.cpp(197,23): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  AlgorithmStudy.vcxproj -> D:\StudyDir\AlgorithmStudy\AlgorithmStudy\Debug\AlgorithmStudy.exe
