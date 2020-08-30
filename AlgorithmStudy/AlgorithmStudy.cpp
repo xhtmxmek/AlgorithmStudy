@@ -105,6 +105,57 @@ public:
     }
 };
 
+typedef struct TreeNode* TreePointer;
+
+typedef struct TreeNode
+{
+    int data;
+    TreePointer lChild, rChild;
+};
+
+//전위 순회
+void preOrder(TreePointer ptr)
+{
+    if (ptr)
+    {
+        cout << ptr->data << endl;
+        preOrder(ptr->lChild);
+        preOrder(ptr->rChild);
+    }
+}
+
+//중위순회
+void inOrder(TreePointer ptr)
+{
+    if (ptr)
+    {        
+        inOrder(ptr->lChild);
+        cout << ptr->data << endl;
+        inOrder(ptr->rChild);
+    }
+}
+
+//후위순회
+void postOrder(TreePointer ptr)
+{
+    if (ptr)
+    {
+        postOrder(ptr->lChild);
+        postOrder(ptr->rChild);
+        cout << ptr->data << endl;
+    }
+}
+
+int dReferArr[100];
+
+int dp(int x)
+{
+    if (x == 1) return 1;
+    if (x == 2) return 1;
+    if (dReferArr[x] != 0) return dReferArr[x];
+    return dReferArr[x] = dp(x - 1) + dp(x - 2);
+}
+
 int main()
 {
     //dfs, bfs test code
@@ -160,53 +211,75 @@ int main()
     //unionParent(parentArr, 6, 7);
     //unionParent(parentArr, 7, 8);
 
-    vector<Edge> v;
+    //vector<Edge> v;
 
-    //node 1
-    v.push_back(Edge(1, 7, 12));
-    v.push_back(Edge(1, 4, 28));
-    v.push_back(Edge(1, 2, 67));
-    v.push_back(Edge(1, 5, 17));
+    ////node 1
+    //v.push_back(Edge(1, 7, 12));
+    //v.push_back(Edge(1, 4, 28));
+    //v.push_back(Edge(1, 2, 67));
+    //v.push_back(Edge(1, 5, 17));
 
-    //node 2    
-    v.push_back(Edge(2, 4, 24));
-    v.push_back(Edge(2, 5, 62));
+    ////node 2    
+    //v.push_back(Edge(2, 4, 24));
+    //v.push_back(Edge(2, 5, 62));
 
-    //node 3
-    v.push_back(Edge(3, 5, 20));
-    v.push_back(Edge(3, 6, 37));
+    ////node 3
+    //v.push_back(Edge(3, 5, 20));
+    //v.push_back(Edge(3, 6, 37));
 
-    //node 4
-    v.push_back(Edge(4, 7, 13));
+    ////node 4
+    //v.push_back(Edge(4, 7, 13));
 
-    //node 5
-    v.push_back(Edge(5, 6, 45));
-    v.push_back(Edge(5, 7, 73));
+    ////node 5
+    //v.push_back(Edge(5, 6, 45));
+    //v.push_back(Edge(5, 7, 73));
 
-    
-    //간선의 비용으로 오름차순 정렬
-    std::sort(v.begin(), v.end());
+    //
+    ////간선의 비용으로 오름차순 정렬
+    //std::sort(v.begin(), v.end());
 
-    //각 정점이 포함된 그래프가 어디인지 저장
-    int set[7];
-    for (int i = 0; i < 7; i++)
-        set[i] = i;
+    ////각 정점이 포함된 그래프가 어디인지 저장
+    //int set[7];
+    //for (int i = 0; i < 7; i++)
+    //    set[i] = i;
 
-    //거리의 합을 0으로 초기화
-    int sum = 0;
-    for (int i = 0; i < v.size(); i++)
-    {
-        //동일한 부모를 가르키지 않는 경우, 사이클이 발생하지 않을 경우에만 선택
-        if (!checkSameParent(set, v[i].Node[0] - 1, v[i].Node[1] - 1)) {
-            sum += v[i].Length;
-            unionParent(set, v[i].Node[0] - 1, v[i].Node[1] - 1);
-        }
+    ////거리의 합을 0으로 초기화
+    //int sum = 0;
+    //for (int i = 0; i < v.size(); i++)
+    //{
+    //    //동일한 부모를 가르키지 않는 경우, 사이클이 발생하지 않을 경우에만 선택
+    //    if (!checkSameParent(set, v[i].Node[0] - 1, v[i].Node[1] - 1)) {
+    //        sum += v[i].Length;
+    //        unionParent(set, v[i].Node[0] - 1, v[i].Node[1] - 1);
+    //    }
 
-    }
+    //}
 
-    cout << sum << endl;
+    //cout << sum << endl;
+
+    int nodeCnt = 15;
+
+    TreeNode Node[16];
+
+    //for (int i = 1; i <= nodeCnt; i++)
+    //{
+    //    Node[i].data = i;
+    //    Node[i].lChild = nullptr;
+    //    Node[i].rChild = nullptr;
+    //}
+
+    //for (int i = 1; i <= nodeCnt; i++)
+    //{
+    //    if (i % 2 == 0)
+    //        Node[i / 2].lChild = &Node[i];
+    //    else
+    //        Node[i / 2].rChild = &Node[i];
+    //}
+
+    //preOrder(&Node[1]);
 
 
+    cout << dp(30) << endl;
     return 0;
 }
 
