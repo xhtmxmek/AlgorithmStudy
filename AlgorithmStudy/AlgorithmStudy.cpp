@@ -468,13 +468,15 @@ int main()
 //cout << solution(foodTime, k);
 
 
-vector<int> v;
+//vector<int> v;
+//
+//v.push_back(8);
+//v.push_back(6);
+//v.push_back(4);
+//
+//cout<< muzzi_solution(v, 15);
 
-v.push_back(8);
-v.push_back(6);
-v.push_back(4);
-
-cout<< muzzi_solution(v, 15);
+coin_caculate();
 
 return 0;
 }

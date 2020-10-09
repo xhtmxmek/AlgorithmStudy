@@ -12,3 +12,5 @@ void guild();
 void multipleAddFunc();
 
 int muzzi_solution(vector<int> food_times, long long k);
+
+void coin_caculate();
