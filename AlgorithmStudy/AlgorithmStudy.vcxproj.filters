@@ -13,10 +13,27 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\그리디 알고리즘">
+      <UniqueIdentifier>{4995c7c8-f32a-487c-ae3b-60cf3203839e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\구현 알고리즘">
+      <UniqueIdentifier>{5c7e92bb-0f0e-46d0-aee2-dd0c6f357970}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AlgorithmStudy.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="GreedyExample.cpp">
+      <Filter>소스 파일\그리디 알고리즘</Filter>
+    </ClCompile>
+    <ClCompile Include="Implement.cpp">
+      <Filter>소스 파일\구현 알고리즘</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GreedyExample.h">
+      <Filter>소스 파일\그리디 알고리즘</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
