@@ -278,38 +278,7 @@ void greedy5_balling()
 
 
 //6번 무지의 먹방 라이브 https://programmers.co.kr/learn/courses/30/lessons/42891#
-int solution(vector<int> food_times, long long k) {
-	int answer = 0;
 
-	int sec = 0;
-
-	int foodIdx = 0;
-	int lastFoodIdx = food_times.size() - 1;	
-
-	while (sec != k)
-	{
-		if (food_times[foodIdx] != 0)
-		{
-			food_times[foodIdx] -= 1;
-			sec++;
-		}
-		
-
-		if (foodIdx == lastFoodIdx)
-		{
-			foodIdx = 0;
-		}
-		else
-			foodIdx++;
-
-		
-	}
-
-
-	answer = foodIdx;
-
-	return answer;
-} 
 
 //새로운 솔루션 -> 먹는데 가장 시간이 적게 걸리는 음식부터 계산 하고 그 이후에는 순차적으로 접근하여 문제를 해결하기
 
@@ -368,10 +337,97 @@ int muzzi_solution(vector<int> food_times, long long k)
 	sort(result.begin(), result.end(), sortCompare); // 음식의 번호 기준으로 정렬
 	return result[(k - summary) % length].second;
 
+}
 
+int muzzi_algorithm(vector<int> food_times, int k)
+{
+	//음식이 먹는데 소요된 시간
+	int summary = 0;
+	for (int i = 0; i < food_times.size(); i++)
+	{
+		summary += food_times[i];
+	}
+
+	if (summary <= k) return -1;
+
+
+	priority_queue<pair<int, int>, vector<pair<int, int>>, compare> pq;
+
+	for (int i = 0; i < food_times.size(); i++)
+	{
+		pq.push({ food_times[i],i + 1 });
+	}
+
+	summary = 0;
+	int preTime = 0;
+	int length = food_times.size();
+
+	while (summary + (pq.top().first - preTime) * length <= k)
+	{
+		int now = pq.top().first;
+		pq.pop();
+		summary += (now - preTime) * length;
+		length -= 1;
+		preTime = now;
+	}
+
+	vector<pair<int, int>> result;
+	while (!pq.empty())
+	{
+		int time = pq.top().first;
+		int num = pq.top().second;
+		pq.pop();
+		result.push_back({ time,num });
+		
+	}
+
+	sort(result.begin(), result.end(), sortCompare);
+
+	return result[(k - summary) % length].second;
 
 }
 
+//그리디----백준
+
+bool coinCompare(int lhs, int rhs)
+{
+	return lhs > rhs;
+}
+void coin_caculate()
+{
+	int coinKinds = 0;
+	int TargetCost = 0;
+
+	cin >> coinKinds;
+	cin >> TargetCost;
+
+	vector<int> coins;
+	for (int i = 0; i < coinKinds; i++)
+	{
+		int tmp = 0;
+		cin >> tmp;
+		coins.push_back(tmp);
+	}
+
+	sort(coins.begin(), coins.end(),coinCompare);
+
+	int remain = TargetCost;
 
 
+	int coinIdx = 0;
+	int coinCnt = 0;
+
+	while (remain != 0)
+	{
+		if (coins[coinIdx] <= remain)
+		{
+			remain -= coins[coinIdx];
+			coinCnt++;
+		}		
+		else
+			coinIdx++;
+	}
+	
+	cout << coinCnt;
+}
 
