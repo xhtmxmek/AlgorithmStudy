@@ -7,6 +7,7 @@
 #include <queue>
 #include <string>
 #include "GreedyExample.h"
+#include "implement.h"
 
 using namespace std;
 
@@ -476,7 +477,9 @@ int main()
 //
 //cout<< muzzi_solution(v, 15);
 
-coin_caculate();
+//MicroWave();
+
+characterMove();
 
 return 0;
 }

@@ -1,14 +1,14 @@
 #include <iostream>
 #include <vector>
 #include <queue>
-
+#include <list>
 using namespace std;
 
 //*------------------그리디 예제-----------------------*//
 
 #include <string>
 #include <algorithm>
-
+#include <sstream>
 //예제 2번
 bool desc(int a, int b)
 {
@@ -429,5 +429,286 @@ void coin_caculate()
 	}
 	
 	cout << coinCnt;
+}
+
+//ATM문제 11399번
+
+
+void atmTimeCaculate()
+{
+	int manCnt = 0;
+	vector<int> atmUseTime;
+	vector<int> timeCost;	
+	cin >> manCnt;
+
+	for (int i = 0; i < manCnt; i++)
+	{
+		int tmp = 0;
+		cin >> tmp;
+		atmUseTime.push_back(tmp);
+	}
+
+	std::sort(atmUseTime.begin(), atmUseTime.end());
+
+	
+	int time = 0;
+	for (int i = 0; i < manCnt; i++)
+	{
+		time += atmUseTime[i];
+		timeCost.push_back(time);
+	}
+
+	int result = 0;
+	for (int i = 0; i < manCnt; i++)
+		result += timeCost[i];
+
+	cout << result;
+	//3 1 4 3 2
+	
+
+}
+
+//1541번 문제
+
+bool isDelim(char c)
+{
+	string delims(";,:. \n\t");
+	for (int i = 0; i < delims.size(); ++i)
+	{
+		if (delims[i] == c)
+			return true;
+	}
+
+	return false;
+}
+
+//x--
+void bracket()
+{
+
+	string s;
+	cin >> s;
+
+	int result = 0;
+
+
+	vector<string> strArr;
+
+	string temp;
+	bool minus = false;
+	for (int i = 0; i <= s.size(); i++)
+	{
+		if (s[i] == '+' || s[i] == '-' || s[i] == '\0')
+		{
+
+			if (minus)
+				result -= stoi(temp);
+			else
+				result += stoi(temp);
+
+			if (s[i] == '-')
+				minus = true;
+
+			temp.clear();
+
+			continue;
+		}
+
+		temp.push_back(s[i]);	//55
+	}
+	
+	cout << result;
+}
+
+//1931번 문제 //x--
+
+bool endTimeSort(pair<int, int> p1, pair<int, int> p2)
+{
+	return p1.second < p2.second;
+}
+
+void conferenceRoom()
+{
+	int conferenceCnt = 0;
+	cin >> conferenceCnt;
+
+	vector<pair<int, int>> times;	
+	for (int i = 0; i < conferenceCnt; i++)
+	{
+		int startTime = 0;
+		int endTime = 0;
+
+		cin >> startTime >> endTime;		
+
+		times.push_back({ startTime,endTime });
+	}
+
+	sort(times.begin(), times.end());
+	sort(times.begin(), times.end(), endTimeSort);
+
+
+	int result = 1;
+
+	int min = times[0].second;
+
+	for (int i = 0; i < conferenceCnt; i++)
+	{
+		if (times[i].first >= min)
+		{
+			result++;
+			min = times[i].second;
+		}
+	}
+
+	cout << result;
+}
+
+//백준 5585번 -> 나머지 금액 문제
+void coinCount()
+{
+	int price = 0;
+	cin >> price;
+	int cnt = 0;
+	int coins[] = { 500,100,50, 5, 10,1 };
+
+	int remain = 1000 - price;
+
+	for (int i = 0; i < 6; i++)
+	{
+		if (remain == 0)
+			break;
+		cnt += (remain / coins[i]);
+		remain = remain % coins[i];
+	}
+
+	cout << cnt;
+}
+
+
+//16208번 문제 x--
+void stickCost()
+{
+	int cnt;
+
+	cin >> cnt;
+
+	priority_queue<int, vector<int> ,greater<int>> pq;
+
+	for (int i = 0; i < cnt; i++)
+	{
+		int temp = 0;
+		cin >> temp;
+		pq.push(temp);
+	}
+
+	long result = 0;
+
+	while (pq.size() > 1)
+	{
+
+		long x = pq.top();
+		pq.pop();
+		long y = pq.top();
+		pq.pop();
+
+		result += x * y;
+
+		pq.push(x + y);
+
+	}
+
+	cout << result;
+}
+
+
+//10162번
+void MicroWave()
+{
+	int time = 0;
+	cin >> time;
+	int button[] = { 300, 60, 10 };
+
+	int remain = time;
+	int buttonPushCnt[] = { 0,0,0 };
+
+	for (int i = 0; i < 3; i++)
+	{
+		buttonPushCnt[i] += remain / button[i];
+		remain = remain % button[i];
+	}
+
+	if (remain > 0)
+		cout << -1;
+	else
+		cout << buttonPushCnt[0]<<" " << buttonPushCnt[1]<<" " << buttonPushCnt[2] << endl;
+}
+
+//1138번 x---
+void LineUp()
+{
+	int cnt = 0;
+	cin >> cnt;
+	vector<int> data;
+	for (int i = 0; i < cnt; i++)
+	{
+		int tmp = 0;
+		cin >> tmp;
+		data.push_back(tmp);
+	}
+
+	vector<int> result;
+	
+
+	result.reserve(4);
+	result.resize(4,0);
+
+	for (int i = 0; i < cnt; i++)
+	{
+		int left = data[i];
+
+		for (int j = 0; j < cnt; j++)
+		{
+			if (left == 0 && result[j] == 0)
+			{
+				result[j] = i + 1;
+				break;
+			}
+
+			else if (result[j] == 0)
+				left--;
+		}
+	}
+	
+	for (int i = 0; i < 4; i++)
+		cout<< result[i] << " ";
+}
+
+//2217번
+void rope()
+{
+	int n = 0;
+	cin >> n;
+
+	vector<int> weights;	
+	for (int i = 0; i < n; i++)
+	{
+		int tmp = 0;
+		cin >> tmp;
+		weights.push_back(tmp);
+	}
+
+	sort(weights.begin(), weights.end());
+	int cnt = n;
+	int max = weights[0] * cnt;
+
+	for (int i = 1; i < n; i++)
+	{
+		int tmp = weights[i] * (cnt - i);
+		if (tmp > max)
+			max = tmp;
+	}
+
+	cout << max;
+
 }
 
