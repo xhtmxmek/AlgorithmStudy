@@ -35,5 +35,8 @@
     <ClInclude Include="GreedyExample.h">
       <Filter>소스 파일\그리디 알고리즘</Filter>
     </ClInclude>
+    <ClInclude Include="implement.h">
+      <Filter>소스 파일\구현 알고리즘</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
