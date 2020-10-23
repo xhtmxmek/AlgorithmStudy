@@ -30,3 +30,5 @@ void MicroWave();
 void LineUp();
 
 void rope();
+
+void stringZipSolution();

@@ -479,7 +479,88 @@ int main()
 
 //MicroWave();
 
-characterMove();
+//stringSort();
+
+//stringZipSolution();
+
+//snake();
+
+vector<vector<int>> test;
+
+vector<int> temp;
+temp.push_back(1);
+temp.push_back(0);
+temp.push_back(0);
+temp.push_back(1);
+
+test.push_back(temp);
+
+
+vector<int> temp2;
+temp2.push_back(1);
+temp2.push_back(1);
+temp2.push_back(1);
+temp2.push_back(1);
+
+test.push_back(temp2);
+
+vector<int> temp3;
+temp3.push_back(2);
+temp3.push_back(1);
+temp3.push_back(0);
+temp3.push_back(1);
+
+test.push_back(temp3);
+
+vector<int> temp4;
+temp4.push_back(2);
+temp4.push_back(2);
+temp4.push_back(1);
+temp4.push_back(1);
+
+test.push_back(temp4);
+
+vector<int> temp5;
+temp5.push_back(5);
+temp5.push_back(0);
+temp5.push_back(0);
+temp5.push_back(1);
+
+test.push_back(temp5);
+
+vector<int> temp6;
+temp6.push_back(5);
+temp6.push_back(1);
+temp6.push_back(0);
+temp6.push_back(1);
+
+test.push_back(temp6);
+
+vector<int> temp7;
+temp7.push_back(4);
+temp7.push_back(2);
+temp7.push_back(1);
+temp7.push_back(1);
+
+test.push_back(temp7);
+
+vector<int> temp8;
+temp8.push_back(3);
+temp8.push_back(2);
+temp8.push_back(1);
+temp8.push_back(1);
+
+test.push_back(temp8);
+
+
+
+
+vector<vector<int>> sol = buildsolution(5,test);
+
+for (int i = 0; i < 5; i++)
+{
+
+}
 
 return 0;
 }
