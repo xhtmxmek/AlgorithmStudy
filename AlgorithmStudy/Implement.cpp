@@ -736,3 +736,51 @@ vector<vector<int>> buildsolution(int n, vector<vector<int>> build_frame) {				/
 	return answer;
 }
 
+
+void Chicken()
+{
+	int n;
+	int m;
+	cin >> n;
+	cin >> m;
+
+	vector<vector<int>> mapInfo(n, vector<int>(n));
+
+	vector<pair<int, int>> chickenStores;
+	for(int i = 0 ; i < n; i++)
+		for (int j = 0; j < n; j++)
+		{
+			int tmp = 0;
+			cin >> tmp;
+			if (tmp == 2)
+				chickenStores.push_back({ n,n });
+			mapInfo[i][j] = tmp;
+		}
+
+
+	//치킨 거리 구하기
+
+	int execeptIdx = 0;
+	int minDist = (n-1)*2;
+	int cityChickDist = 0;
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+		{
+			if (mapInfo[i][j] == 1)
+			{
+				for (int k = 0; k < chickenStores.size(); k++)
+				{
+					if (k != execeptIdx)
+					{
+						int dist = abs(i - chickenStores[k].first) + abs(j - chickenStores[k].second);
+						minDist = min(minDist, dist);
+					}
+				}
+			}
+		}
+
+
+
+}
+
+
