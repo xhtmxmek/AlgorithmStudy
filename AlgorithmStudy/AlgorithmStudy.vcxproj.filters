@@ -22,6 +22,9 @@
     <Filter Include="소스 파일\DFS/BFS">
       <UniqueIdentifier>{77ea588c-6871-46a3-8ed5-cd528d09de5f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\모아이테스트">
+      <UniqueIdentifier>{d3f3cd50-74cc-4cbd-9bba-c09a7de9f4ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AlgorithmStudy.cpp">
@@ -35,6 +38,9 @@
     </ClCompile>
     <ClCompile Include="dfs.cpp">
       <Filter>소스 파일\DFS/BFS</Filter>
+    </ClCompile>
+    <ClCompile Include="moiTest.cpp">
+      <Filter>소스 파일\모아이테스트</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
