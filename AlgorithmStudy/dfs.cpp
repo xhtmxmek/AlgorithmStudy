@@ -316,10 +316,10 @@ void virus(int x, int y, int n, int m)
 	{
 		int nx = x + virusX[i];
 		int ny = y + virusY[i];
-		if (nx >= 0 && nx < n && ny >= 0 && ny < m) {
-			if (temp[nx][ny] == 0)
+		if (ny >= 0 && ny < n && nx >= 0 && nx < m) {
+			if (temp[ny][nx] == 0)
 			{
-				temp[nx][ny] = 2;
+				temp[ny][nx] = 2;
 				virus(nx, ny, n, m);
 			}
 		}							
@@ -341,39 +341,41 @@ int getScore(int n, int m) {
 	return score;
 }
 
-void virusDfs(int count,int n, int m)
+
+void backTrackDfs(int cnt, int n, int m)
 {
-	// 울타리가 3개 설치된 경우
-	if (count == 3) {
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < m; j++) {
+	if (cnt == 3)
+	{
+		for(int i = 0; i < n; i++)
+			for (int j = 0; j < m; j++)
+			{
 				temp[i][j] = arr[i][j];
 			}
-		}
-		// 각 바이러스의 위치에서 전파 진행
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < m; j++) {
-				if (temp[i][j] == 2) {
-					virus(i, j,n,m);
-				}
+
+		for(int i = 0 ; i < n; i++)
+			for (int j = 0; j < m; j++)
+			{
+				if (temp[i][j] == 2)
+					virus(j, i, n, m);
 			}
-		}
-		// 안전 영역의 최대값 계산
+
 		result = max(result, getScore(n,m));
 		return;
+
 	}
-	// 빈 공간에 울타리를 설치
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			if (arr[i][j] == 0) {
+
+	for(int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+		{
+			if (arr[i][j] == 0)
+			{
+				cnt++;
 				arr[i][j] = 1;
-				count += 1;
-				virusDfs(count,n,m);
+				backTrackDfs(cnt, n, m);
 				arr[i][j] = 0;
-				count -= 1;
+				cnt--;
 			}
 		}
-	}
 }
 
 
@@ -395,31 +397,30 @@ void virusLab()
 			arr[i][j] = val;
 		}
 
-	virusDfs(0, n, m);
+	backTrackDfs(0, n, m);
 
 	cout << result;
 
 }
 
-bool diseaseDfs(vector<vector<int>>& mapInfo, int x, int y, int width, int height, int time,int level,int virusNum)
+class Virus
 {
-	if (x < 0 || x >= width || y < 0 || y >= height)
-		return false;
+public:
+	int index;
+	int second;
+	int posX;
+	int posY;
+	Virus(int idx, int sec, int x, int y)
+		:index(idx),second(sec),posX(x),posY(y)
+	{
 
-
-	level++;
-	if (mapInfo[y][x] == 0 && level <= time)
-	{		
-		mapInfo[y][x] = virusNum;
-		diseaseDfs(mapInfo, x - 1, y, width, height,time,level, virusNum);
-		diseaseDfs(mapInfo, x + 1, y, width, height, time, level, virusNum);
-		diseaseDfs(mapInfo, x, y - 1, width, height, time, level, virusNum);
-		diseaseDfs(mapInfo, x, y + 1, width, height, time, level, virusNum);
-
-		return true;
 	}
-	return false;
-}
+
+	bool operator<(const Virus& src)
+	{
+		return this->index < src.index;
+	}
+};
 
 void disease()
 {
@@ -429,55 +430,58 @@ void disease()
 	cin >> k;
 	vector<vector<int>> mapInfo = vector<vector<int>>(n, vector<int>(n));
 
+	vector<Virus> vArr;
+
 	for(int i = 0 ; i < n; i++)
 		for (int j = 0; j < n; j++)
 		{
 			int tmp = 0;
 			cin >> tmp;
 			mapInfo[i][j] = tmp;
+			if (tmp != 0) //바이러스일 경우
+				vArr.push_back(Virus(tmp, 0, j, i));
 		}
 
 
 	int s;
 	cin >> s;
-
-	vector<vector<pair<int,int>>> virusNumPos;	
-	virusNumPos.reserve(k+1);
-	virusNumPos.resize(k + 1);
-
-	for(int i = 0; i < n; i++)
-		for (int j = 0; j < n; j++)
-		{
-			int val = mapInfo[i][j];
-			if (val != 0)
-			{
-				virusNumPos[val].push_back({i,j});
-			}
-		}
-
-	sort(virusNumPos.begin(), virusNumPos.end());
-	
-	for (int sec = 1; sec <= s; sec++)
-	{
-		for (int i = 1; i < k+1; i++)
-		{	
-			for (int j = 0; j < virusNumPos[i].size(); j++)
-			{
-				int vNum = i;
-				int posX = virusNumPos[i][j].first;
-				int posY = virusNumPos[i][j].second;
-				diseaseDfs(mapInfo, posX, posY, n, n, sec, 0, vNum);
-			}
-
-			
-		}
-		
-	}
-
 	int x;	
 	int y;
 	cin >> x;
 	cin >> y;
+
+	//bfs를 수행(그전에 정렬하여 넣어주기)
+
+	sort(vArr.begin(), vArr.end());
+
+	queue<Virus> q;
+	
+	for(int i = 0; i < vArr.size(); i++)
+		q.push(vArr[i]);
+
+	while (!q.empty())
+	{
+		Virus currVirus = q.front();
+		q.pop();
+
+		if (currVirus.second == s)
+			break;
+
+		for (int i = 0; i < 4; i++)
+		{
+			int nx = currVirus.posX + virusX[i];
+			int ny = currVirus.posY + virusY[i];
+
+			if (nx >= 0 && nx < n && ny>=0 && ny < n)
+			{
+				if (mapInfo[ny][nx] == 0)
+				{
+					mapInfo[ny][nx] = currVirus.index;
+					q.push(Virus(currVirus.index, currVirus.second + 1, nx, ny));
+				}
+			}
+		}
+	}
 
 	cout << mapInfo[y-1][x-1]<<endl;
 }
@@ -517,6 +521,6 @@ int main()
 	string s = "(()())()";
 	string s2 = ")(";
 	//branketSolution(s2);
-	virusLab();
+	disease();
 	return 0;
 }
