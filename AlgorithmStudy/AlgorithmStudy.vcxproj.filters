@@ -19,6 +19,9 @@
     <Filter Include="소스 파일\구현 알고리즘">
       <UniqueIdentifier>{5c7e92bb-0f0e-46d0-aee2-dd0c6f357970}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\DFS/BFS">
+      <UniqueIdentifier>{77ea588c-6871-46a3-8ed5-cd528d09de5f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AlgorithmStudy.cpp">
@@ -29,6 +32,9 @@
     </ClCompile>
     <ClCompile Include="Implement.cpp">
       <Filter>소스 파일\구현 알고리즘</Filter>
+    </ClCompile>
+    <ClCompile Include="dfs.cpp">
+      <Filter>소스 파일\DFS/BFS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -122,6 +122,101 @@ cout << cnt << endl;
 }
 
 
+void gameSimulate()
+{
+	int n;
+	int m;
+	int dir;
+
+	cin >> n;
+	cin >> m;
+
+	int charPosX = 0;
+	int charPosY = 0;
+	cin >> charPosX;
+	cin >> charPosY;
+
+	cin >> dir;
+
+
+	int dirX[] = { 0,1,0,-1 };	//북,동,남,서
+	int dirY[] = { -1,0,1,0 };
+	vector<vector<pair<int, bool>>> mapInfo = vector<vector<pair<int, bool>>>(n, vector<pair<int, bool>>(m, { 0,false }));
+
+	for(int i = 0 ; i < n; i++)
+		for (int j = 0; j < m; j++)
+		{
+			int tmp = 0;
+			cin >> tmp;
+			mapInfo[i][j].first = tmp;
+			mapInfo[i][j].second = false;
+		}
+
+
+
+
+	mapInfo[charPosY][charPosX].second = true;
+
+	int result = 0;
+	bool endFlag = false;
+	while (!endFlag)
+	{
+		//1. 현재 방향 기준으로 왼쪽방향에 가보지 않은 칸이 있는지 확인한다. 이과정에서 무조건 왼쪽으로 회전한다.
+		dir -= 1;
+		if (dir < 0)
+			dir = 3;
+		//2. 왼쪽칸이 가본칸인지 안가본칸이지 확인.
+		int nx = charPosX + dirX[dir];
+		int ny = charPosY + dirY[dir];
+
+
+		int failFlag = 0;
+
+		int result = 0;
+		bool IsSea = ((nx<0 || nx >= m || ny<0 || ny>=n) || mapInfo[ny][nx].first == 1) ? true : false;
+		//for (int i = 0; i < 4; i++)
+		
+			//가지못하는 경우 1. 바다일경우
+			if (IsSea || mapInfo[ny][nx].second == true)
+			{
+				failFlag++;
+				if (failFlag == 4)
+				{
+					int tempX = charPosX - dirX[dir];
+					int tempY = charPosY - dirY[dir];
+					if ((tempX < 0 || tempX >= m || tempY < 0 || tempY >= n) || mapInfo[tempY][tempX].first == 1)
+					{
+						endFlag = true;
+						cout << result;
+
+					}
+						
+					else
+					{
+						charPosX = tempX;
+						charPosY = tempY;
+						result++;
+						failFlag = 0;
+					}
+				}
+			}
+												
+			//안가본 칸이고 육지일경우 해당방향으로 전진.
+			else if (mapInfo[ny][nx].second == false && mapInfo[ny][nx].first == 0)
+			{				
+				mapInfo[ny][nx].second == true;
+				charPosX = nx;
+				charPosY = ny;				
+				result++;
+				failFlag = 0;
+			}			
+		
+
+
+	}
+}
+
+
 enum class mapInfo
 {
 	land,
@@ -410,89 +505,71 @@ bool solution(vector<vector<int> > key, vector<vector<int> > lock) {
 	return false;
 }
 
-bool newCheck(vector< vector<int>> src)
-{
-	int lockLength = src.size() / 3;
 
-	for(int i  = lockLength ; i < lockLength * 2; i++)
-		for (int j = lockLength; j < lockLength * 2; j++)
+bool newCheck(vector<vector<int>> newLock)
+{
+	int length = newLock.size() / 3;
+	for(int i = length; i < newLock.size() * 2; i++)
+		for (int j = length; j < newLock.size() * 2; j++)
 		{
-			if (src[i][j] != 1)
+			if (newLock[i][j] != 1)
 				return false;
 		}
 
 	return true;
 }
 
-
-void LockNKey()
+bool newLockSolution(vector<vector<int>> lock, vector<vector<int>> key)
 {
-	//주어진 값들
-	vector<vector<int>> lock;
+	int n = lock.size();
+	int m = key.size();
 
-	vector<vector<int>> key;
+	//3배 키운 새로운 자물쇠 만들기
+	vector<vector<int>> newLock = vector<vector<int>>(n * 3, vector<int>(n * 3, 0));
 
-
-	bool result = false;
-	int lockSize = 0;
-	int keySize = 0;
-
-	cin >> lockSize;
-	cin >> keySize;
-
-
-	vector<vector<int>> newLock(lockSize * 3,  vector<int>(lockSize * 3));
-
-	//가운데에 값을 집어 넣기
-	for (int i = 0; i < lockSize; i++)
-	{
-		for (int j = 0; j < lockSize; j++)
+	//가운데 부분 0으로 채우기
+	for(int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
 		{
-			newLock[i + lockSize][j + lockSize] = lock[i][j];
+			newLock[i + n][j + n] = lock[i][j];
 		}
-	}
 
-	
 
-	for (int rotation = 0; rotation < 4; rotation++)
+	//회전시켜가며 한칸씩 옮기며 맞춰보기
+	for (int i = 0; i < 4; i++)
 	{
 		key = rotateClockWiseMatrixBy90Degree(key);
 
-		for (int i = 0; i < lockSize * 2; i++)
-		{
-			for (int j = 0; j < lockSize * 2; j++)
+		//열쇠 꽂아보기
+		for(int x = 0 ; x < n*2; x++)
+			for (int y = 0; y < n * 2; y++)
 			{
-				//자물쇠에 끼워보기
-				for (int y = 0; y < keySize; y++)
-				{
-					for (int x = 0; x < lockSize; x++)
+				for(int i = 0; i < n; i++)
+					for (int j = 0; j < n; j++)
 					{
-						newLock[i + y][j + x] += key[y][x];
+						newLock[x + i][y + j] += key[i][j];
 					}
-				}
 
+				//키 꼽아보고 체크
 				if (newCheck(newLock))
-				{
-					result = true;
-					cout << "잠금 해제";
-					return;
-				}
+					return true;
 
-				//자물쇠에서 다시 빼기
-				for (int y = 0; y < keySize; y++)
-				{
-					for (int x = 0; x < lockSize; x++)
+				//열쇠 다시 빼기
+				
+				for (int i = 0; i < n; i++)
+					for (int j = 0; j < n; j++)
 					{
-						newLock[i + y][j + x] -= key[y][x];
+						newLock[x + i][y + j] -= key[i][j];
 					}
-				}
-					
-			}
-		}
+			}		
 	}
 
-
+	return false;
 }
+
+
+
+
 
 void snake()
 {
@@ -621,166 +698,419 @@ void snake()
 }
 
 
-struct PointData
+bool possible(vector<vector<int>> answer)
 {
-	bool none;
-	bool columnBot;
-	bool columnTop;
-	bool paperLeft;
-	bool paperRight;
-};
+	for (int i = 0; i < answer.size(); i++)
+	{
+		int x = answer[i][0];
+		int y = answer[i][1];
+		int stuff = answer[i][2];
 
-vector<vector<int>> buildsolution(int n, vector<vector<int>> build_frame) {				//gg
-	vector<vector<int>> answer;
-
-	vector<vector<PointData>> mapInfo(n+1, vector<PointData>(n+1));
-
-	for (int i = 0; i < n+1; i++)
-		for (int j = 0; j < n+1; j++)
+		//기둥일경우
+		if (stuff == 0)
 		{
-			mapInfo[i][j].none = true;
-			mapInfo[i][j].columnBot= false;
-			mapInfo[i][j].columnTop = false;
-			mapInfo[i][j].paperLeft = false;
-			mapInfo[i][j].paperRight = false;
+			bool check = false;
+			if (y == 0)
+				check = true;
 
+			for (int j = 0; j < answer.size(); j++)
+			{
+				//기둥의 위일경우
+				if (x == answer[j][0] && y - 1 == answer[j][1] && answer[j][2] == 0)
+					check = true;
+				//보의 위일 경우
+				if (x - 1 == answer[j][0] && y == answer[j][1] && answer[j][2] == 1)
+					check = true;
+				if (x == answer[j][0] && y == answer[j][1] && answer[j][2] == 1)
+					check = true;
+			}
+
+			if (!check)
+				return false;
 		}
-			//0: 아무것도 없음 1: 기둥밑둥 2: 기둥윗둥 3: 보의 왼쪽 4:보의 오른쪽
+		
+		//보일 경우
+		if (stuff == 1)
+		{
+			bool check = false;
+			bool left = false;
+			bool right = false;
+			for (int j = 0; j < answer.size(); j++)
+			{
+				//한쪽 끝부분이 기둥의 위일 경우
+				if (x == answer[j][0] && y - 1 == answer[j][1] && answer[j][2] == 0)
+					check = true;
+				if (x + 1 == answer[j][0] && y - 1 == answer[j][1] && answer[j][2] == 0)
+					check = true;
+				//양쪽끝이 보일 경우
+				if (x - 1 == answer[j][0] && y == answer[j][1] && answer[j][2] == 1)
+					left = true;
+				if (x + 1 == answer[j][0] && y == answer[j][1] && answer[j][2] == 1)
+					right = true;
+
+			}
+
+			if (left && right) check = true;
+			if (!check)
+				return false;
+		}
+
+	}
+	return true;
+}
+
+vector<vector<int>> buildsolution(int n, vector<vector<int>> build_frame) 
+
+{				
+	vector<vector<int>> answer;
 
 	for (int i = 0; i < build_frame.size(); i++)
 	{
-		int px = build_frame[i][0];
-		int py = build_frame[i][1];
+		int x = build_frame[i][0];
+		int y = build_frame[i][1];
+		bool stuff = build_frame[i][2];
 
-		//1)기둥일 경우
-		if (build_frame[i][2] == 0)
+		bool eraseCheck = build_frame[i][3];
+
+		int eraseIdx = 0;
+		if (eraseCheck == 0)	//삭제
 		{
-			if (build_frame[i][3] == 1)	//설치할 경우?
-			{				
-				if (mapInfo[px][py].none == false ||
-					(mapInfo[px][py].none == true && py == 0))	//설치하려는 위치가 바닥이거나 기둥윗둥이거나 보의 양 사이드 중 하나일때
-				{
-					//mapInfo[px][py + 1].column = 1;
-					mapInfo[px][py].columnBot = true;
-					mapInfo[px][py].none = false;
-
-					mapInfo[px][py+1].columnTop = true;
-					mapInfo[px][py + 1].none = false;
-				}
-				//벗어나는 경우엔 설치 x
-			}
-			else
+			for (int j = 0; j < build_frame.size(); j++)
 			{
-				//기둥을 삭제하는 경우 --> 위에 뭔가 없을때 삭제 가능
-				if (!mapInfo[px][py + 1].paperLeft&&
-					!mapInfo[px][py + 1].paperRight)
-				{
-					mapInfo[px][py].columnBot = false;
-					mapInfo[px][py+1].columnTop = false;
-				}
+				if (x == answer[j][0] && y == answer[j][1] && stuff == answer[j][2])
+					eraseIdx = j;
 			}
+
+			vector<int> erased = answer[eraseIdx];
+			answer.erase(answer.begin() + eraseIdx);
+			if (!possible(answer))
+				answer.push_back(erased);
 		}
 		else
 		{
-			//2) 보일경우
-			if (build_frame[i][3] == 1)	//설치할 경우?
-			{
-				if ((mapInfo[px][py-1].columnBot == true || mapInfo[px+1][py - 1].columnBot == true)||
-					(mapInfo[px][py].paperRight && mapInfo[px + 1][py].paperLeft))	//설치하려는 위치가 기둥윗둥이거나 양 사이드에 보가 있을때
-				{					
-					mapInfo[px][py].paperLeft = true;
-					mapInfo[px][py].none = false;
-					mapInfo[px+1][py].paperRight = true;
-					mapInfo[px + 1][py].none = false;
-					
-				}
-				//벗어나는 경우엔 설치 x
-			}
-			else
-			{
-				//보를 삭제하는 경우 -> 위에 무언가 없을시 또는 양옆에 아무것도 없을시 삭제 가능
-				
-				if ((py + 1 < n+1 && mapInfo[px][py + 1].none) ||
-					(mapInfo[px][py].paperRight == false &&
-					(px + 1 < n+1 && mapInfo[px + 1][py].paperLeft==false)))
-				{
-					mapInfo[px][py].paperLeft = false;									
-					mapInfo[px + 1][py].paperRight = false;
-
-				}				
-			}
-
+			vector<int> temp;
+			temp.push_back(x);
+			temp.push_back(y);
+			temp.push_back(stuff);
+			answer.push_back(temp);
+			if (!possible(answer))
+				answer.pop_back();
 		}
-
-		if (!mapInfo[px][py].columnBot &&
-			!mapInfo[px][py].columnTop &&
-			!mapInfo[px][py].paperLeft &&
-			!mapInfo[px][py].paperRight)
-			mapInfo[px][py].none = true;
 	}
 
-	for(int i = 0 ; i < n+1; i++)
-		for (int j = 0; j < n+1; j++)
-		{
-			if (!mapInfo[i][j].none)
-			{
-				vector<int> temp;
-				temp.push_back(i);
-				temp.push_back(j);
-				int column = (mapInfo[i][j].columnBot) ? 0 : 1;
-				temp.push_back(column);				
-				answer.push_back(temp);
-			}
-		}
+	sort(answer.begin(), answer.end());
 
 	return answer;
 }
 
 
+//순열? 조합문제?
+
+int getSum(vector<pair<int, int>>& candidates, vector<pair<int,int>>& house)
+
+{
+	int result = 0;
+
+	for (int i = 0; i < house.size(); i++)
+	{
+		int hx = house[i].first;
+		int hy = house[i].second;
+
+		int minimum = 1e9;
+		for (int j = 0; j < candidates.size(); j++)
+		{
+			int cx = candidates[j].first;
+			int cy = candidates[j].second;
+
+			minimum = min(minimum, abs(cx - hx) + abs(cy - hy));
+		}
+
+		result += minimum;
+	}
+
+	return result;
+}
 void Chicken()
 {
 	int n;
 	int m;
+
+	vector<pair<int, int>> houses;
+	vector<pair<int, int>> chickens;
 	cin >> n;
 	cin >> m;
 
-	vector<vector<int>> mapInfo(n, vector<int>(n));
+	vector<vector<int>> mapInfo = vector<vector<int>>(n, vector<int>(n));
 
-	vector<pair<int, int>> chickenStores;
-	for(int i = 0 ; i < n; i++)
+	for (int i = 0; i < n; i++)
 		for (int j = 0; j < n; j++)
 		{
 			int tmp = 0;
 			cin >> tmp;
-			if (tmp == 2)
-				chickenStores.push_back({ n,n });
 			mapInfo[i][j] = tmp;
+
+			//일반집일경우
+			if (tmp == 0)
+				houses.push_back({ i,j });
+			else if (tmp == 1)
+				chickens.push_back({ i,j });
 		}
 
+	//치킨집 중에서 m개의 치킨집을 뽑는다
+	vector<bool> binary(chickens.size());
+	fill(binary.end() - m, binary.end(), true);
 
-	//치킨 거리 구하기
+	int result = 1e9;
 
-	int execeptIdx = 0;
-	int minDist = (n-1)*2;
-	int cityChickDist = 0;
-	for (int i = 0; i < n; i++)
-		for (int j = 0; j < n; j++)
+	do {
+		vector < pair<int, int>> now;
+		for (int i = 0; i < chickens.size(); i++)
 		{
-			if (mapInfo[i][j] == 1)
+			if (binary[i])
 			{
-				for (int k = 0; k < chickenStores.size(); k++)
-				{
-					if (k != execeptIdx)
-					{
-						int dist = abs(i - chickenStores[k].first) + abs(j - chickenStores[k].second);
-						minDist = min(minDist, dist);
-					}
-				}
+				int cx = chickens[i].first;
+				int cy = chickens[i].second;
+				now.push_back({ cx,cy });
 			}
 		}
 
+		result = min(result, getSum(now,houses));
+
+	} while (next_permutation(binary.begin(), binary.end()));
+	
+}
+
+int restorantSolution(int n, vector<int> weak, vector<int> dist) {
+	// 길이를 2배로 늘려서 '원형'을 일자 형태로 변경
+	int length = weak.size();
+	for (int i = 0; i < length; i++) {
+		weak.push_back(weak[i] + n);
+	}
+	// 투입할 친구 수의 최솟값을 찾아야 하므로 len(dist) + 1로 초기화
+	int answer = dist.size() + 1;
+	// 0부터 length - 1까지의 위치를 각각 시작점으로 설정
+	for (int start = 0; start < length; start++) {
+		// 친구를 나열하는 모든 경우 각각에 대하여 확인
+		do {
+			int cnt = 1; // 투입할 친구의 수
+			// 해당 친구가 점검할 수 있는 마지막 위치
+			int position = weak[start] + dist[cnt - 1];
+			// 시작점부터 모든 취약한 지점을 확인
+			for (int index = start; index < start + length; index++) {
+				// 점검할 수 있는 위치를 벗어나는 경우
+				if (position < weak[index]) {
+					cnt += 1; // 새로운 친구를 투입
+					if (cnt > dist.size()) { // 더 투입이 불가능하다면 종료
+						break;
+					}
+					position = weak[index] + dist[cnt - 1];
+				}
+			}
+			answer = min(answer, cnt); // 최솟값 계산
+		} while (next_permutation(dist.begin(), dist.end()));
+	}
+	if (answer > dist.size()) {
+		return -1;
+	}
+	return answer;
+}
+
+int resSol(int n, vector<int> weak, vector<int> dist)
+{
+	int length = weak.size();
+	for (int i = 0; i < length; i++)
+		weak.push_back(weak[i] + n);
+
+	int answer = dist.size() + 1;
+
+	for (int start = 0; start < length; start++)
+	{
+		do {
+			int cnt = 1;
+			//친구가 도달할수 있는 마지막 포지션
+			int position = start + dist[cnt - 1];
+
+			//시작점부터 취약점을 확인
+			for (int index = start; index < start + length; index++)
+			{
+				if (position < weak[index])
+				{
+					cnt++;
+					if (cnt > dist.size())
+						break;
+
+					position = weak[index] + dist[cnt - 1];
+				}
+				
+
+			}
+			answer = min(answer, cnt);
+
+		} while (next_permutation(dist.begin(), dist.end()));
+		
+	}
+	if (answer > dist.size()) {
+		return -1;
+	}
+	return answer;
+}
+
+void luckyStraightNew()
+{
+	string score;
+	cin >> score;
 
 
+	//왼쪽 점수의 합
+	int leftSum = 0;
+	for (int i = 0; i < score.length() / 2; i++)
+	{
+		int num = score[i] - '0';		
+		leftSum += num;
+	}
+
+	//오른쪽 점수의 합
+	int rightSum = 0;
+	for (int i = score.length() / 2; i < score.length(); i++)
+	{
+		int num = score[i] - '0';
+		rightSum += num;
+	}
+
+	if (leftSum == rightSum)
+		cout << "LUCKY";
+	else
+		cout << "READY";
+	
+}
+
+void stringSortNew()
+{
+	string s;
+	cin >> s;
+
+	string result;
+	int sum = 0;
+
+	for (int i = 0; i < s.length(); i++)
+	{
+		if (s[i] < '0' || s[i]>'9')
+			result.push_back(s[i]);
+		else
+			sum += s[i] - '0';
+	}
+
+	sort(result.begin(), result.end());
+
+	result = result + to_string(sum);
+
+	cout << result;
 }
 
 
+
+void snakeNew()
+{
+	int n = 0;
+	int appleCnt = 0;
+
+	cin >> n;
+	cin >> appleCnt;
+
+	vector<vector<int>> mapInfo = vector<vector<int>>(n, vector<int>(n, 0));
+	
+	queue<pair<int, int>> snakePos;
+
+	snakePos.push({ 0, 0 });
+
+	mapInfo[0][0] = 2;
+	int snakedirX[] = { 1,0,-1,0 };			//우,하,좌,상 순으로
+	int snakedirY[] = { 0,1,0,-1 };
+
+	int snakeDir = 0;
+
+	for (int i = 0; i < appleCnt; i++)
+	{
+		int tmpX = 0;
+		int tmpY = 0;
+		cin >> tmpY;
+		cin >> tmpX;
+		mapInfo[tmpY-1][tmpX-1] = 1;
+	}
+
+	int sec = 0;
+
+	int dirChangeCnt = 0;
+	cin >> dirChangeCnt;
+	vector<pair<int, char>> dirInfo;
+	for (int i = 0; i < dirChangeCnt; i++)
+	{
+		int time = 0;
+		char direction;
+
+		cin >> time;
+		cin >> direction;
+
+		dirInfo.push_back({ time,direction });
+	}
+
+	int dirIdx = 0;
+	while (true)
+	{
+		sec++;
+
+		int nx = snakePos.back().first + snakedirX[snakeDir];
+		int ny = snakePos.back().second + snakedirY[snakeDir];
+
+		if (nx < 0 || nx >= n || ny < 0 || ny >= n)
+			break;
+
+		if (mapInfo[ny][nx] == 2)
+			break;
+
+		snakePos.push({ nx,ny });	//머리 위치 갱신
+	
+		//0. 아무것도 없음 1. 사과 2. 뱀이 존재
+
+		//꼬리부분의 맵상태도 표기하기.
+		int tX = snakePos.front().first;
+		int tY = snakePos.front().second;
+		if (mapInfo[ny][nx] == 1)
+		{
+			mapInfo[ny][nx] = 2;	//뱀이 가는곳은 맵에 표기를 해둔다.
+
+		}
+			
+		else if(mapInfo[ny][nx] == 0)
+		{
+			mapInfo[ny][nx] = 2;	//뱀이 가는곳은 맵에 표기를 해둔다
+			mapInfo[tY][tX] = 0;
+			snakePos.pop();			//꼬리 자르기
+		}
+		
+		if (dirIdx < dirChangeCnt && sec == dirInfo[dirIdx].first)
+		{
+			if (dirInfo[dirIdx].second == 'L')
+				snakeDir -= 1;				
+			else
+				snakeDir += 1;
+				
+			if (snakeDir < 0)
+				snakeDir = 3;
+			else if (snakeDir > 3)
+				snakeDir = 0;
+
+			dirIdx++;			
+		}
+		
+	}
+
+	cout << sec;
+}
+
+
+//int main()
+//{
+//	snakeNew();
+//	return 0;
+//}

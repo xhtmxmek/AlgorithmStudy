@@ -15,27 +15,44 @@ bool desc(int a, int b)
 	return a > b;
 }
 
-int test(vector<int>& arr, int repeatNum, int max)
+void bigNumber()
 {
-	//arr은 내림차순으로 sort되었다고 가정 
-	int firstVal = arr[0];
-	int secondVal = arr[1];
-	int result = 0;
-	int firstCnt = 0;
+	int n;
+	int m;
+	int k;
 
-	//가장 큰수 repeatNum 개, 그다음 큰수 1번 반복됨(repeat + 1)꼴
-	firstCnt = max / (repeatNum + 1) * repeatNum;
-	firstCnt += max % (repeatNum + 1);
-	result = firstCnt * firstVal;
-	//그다음으로 큰 숫자의 갯수 구하기
+	vector<int> arr;
 
-	int secondCnt = max - firstCnt;
-	result += secondVal * secondCnt;
+	cin >> n;
+	cin >> m;
+	cin >> k;
+	for (int i = 0; i < n; i++)
+	{
+		int tmp = 0;
+		cin >> tmp;
+		arr.push_back(tmp);
+	}
+	
+	sort(arr.begin(), arr.end());
 
-	return result;
+	int first = arr[n - 1];
+	int second = arr[n - 2];
+
+
+	int idx = 0;
+	while (idx < m)
+	{
+		idx = k + 1;
+
+		idx * 2;
+	}
+
+	int result = (k + 1) * ((first * k) + second);
+
+
+	int repeatCnt = 0;
+
 }
-
-
 
 //예제 3번
 void greedyExample3()
@@ -657,10 +674,10 @@ void LineUp()
 	}
 
 	vector<int> result;
-	
+
 
 	result.reserve(4);
-	result.resize(4,0);
+	result.resize(4, 0);
 
 	for (int i = 0; i < cnt; i++)
 	{
@@ -678,9 +695,9 @@ void LineUp()
 				left--;
 		}
 	}
-	
+
 	for (int i = 0; i < 4; i++)
-		cout<< result[i] << " ";
+		cout << result[i] << " ";
 }
 
 //2217번
@@ -689,7 +706,7 @@ void rope()
 	int n = 0;
 	cin >> n;
 
-	vector<int> weights;	
+	vector<int> weights;
 	for (int i = 0; i < n; i++)
 	{
 		int tmp = 0;
@@ -712,3 +729,76 @@ void rope()
 
 }
 
+struct MuzzCompare
+{
+	bool operator()(pair<int, int> p1, pair<int, int> p2)
+	{
+		return p1.first < p2.first;
+	}
+};
+
+bool muzziComp(pair<int,int> lhs, pair<int,int> rhs)
+{
+	return lhs.second < rhs.second;
+}
+
+int muzzi_algorithmNew(vector<int> food_times, int k)
+{
+	int result = 0;
+
+	long long summary = 0;
+
+	for (int i = 0; i < food_times.size(); i++)
+		summary += food_times[i];
+
+	if (summary <= k)
+		return -1;
+	priority_queue< pair<int, int>, vector<pair<int, int>>, MuzzCompare> pq;
+
+	for (int i = 0; i < food_times.size(); i++)
+	{
+		int time = food_times[i];
+		int order = i + 1;
+		pq.push({ time,order });
+	}
+
+	summary = 0;
+	int preTime = 0;
+	int numFood = food_times.size();
+	while (summary + (pq.top().first - preTime) * numFood <= k)
+	{
+		int currTime = pq.top().first;
+		pq.pop();
+		summary += (currTime - preTime) * numFood;
+		numFood--;
+		preTime = currTime;	
+	}
+
+	vector<pair<int, int>> final;
+	
+
+	while (!pq.empty())
+	{
+		int t = pq.top().first;
+		int order = pq.top().second;
+		pq.pop();
+		final.push_back({ t,order });
+	}
+
+	sort(final.begin(), final.end());
+
+	result = final[(k - summary) % numFood].second;
+
+	return result;
+}
+
+
+
+
+
+
+
+//int main()
+//{	
+//	return 0;
+//}
