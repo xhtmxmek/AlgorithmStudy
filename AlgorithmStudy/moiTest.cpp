@@ -177,22 +177,22 @@ public:
 };
 
 
-int main()
-{
-    Solution2 s;
-
-    int cnt = 0;
-    cin >> cnt;
-
-    vector<int> states;
-    for (int i = 0; i < cnt; i++)
-    {
-        int tmp = 0;
-        cin >> tmp;
-        states.push_back(tmp);
-    }
-
-    int out = s.solution(states);
-    cout << out << endl;
-
-}
+//int main()
+//{
+//    Solution2 s;
+//
+//    int cnt = 0;
+//    cin >> cnt;
+//
+//    vector<int> states;
+//    for (int i = 0; i < cnt; i++)
+//    {
+//        int tmp = 0;
+//        cin >> tmp;
+//        states.push_back(tmp);
+//    }
+//
+//    int out = s.solution(states);
+//    cout << out << endl;
+//
+//}
