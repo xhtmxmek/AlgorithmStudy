@@ -447,8 +447,8 @@ void disease()
 	cin >> s;
 	int x;	
 	int y;
-	cin >> x;
 	cin >> y;
+	cin >> x;
 
 	//bfs를 수행(그전에 정렬하여 넣어주기)
 

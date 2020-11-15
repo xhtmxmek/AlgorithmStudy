@@ -143,6 +143,7 @@
     <ClCompile Include="dfs.cpp" />
     <ClCompile Include="GreedyExample.cpp" />
     <ClCompile Include="Implement.cpp" />
+    <ClCompile Include="moiTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GreedyExample.h" />
