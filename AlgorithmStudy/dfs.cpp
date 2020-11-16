@@ -516,11 +516,11 @@ string branketSolution(string p) {
 	return answer;
 }
 
-int main()
-{ 
-	string s = "(()())()";
-	string s2 = ")(";
-	//branketSolution(s2);
-	disease();
-	return 0;
-}
+//int main()
+//{ 
+//	string s = "(()())()";
+//	string s2 = ")(";
+//	//branketSolution(s2);
+//	disease();
+//	return 0;
+//}

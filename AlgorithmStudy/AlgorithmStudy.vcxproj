@@ -140,6 +140,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AlgorithmStudy.cpp" />
+    <ClCompile Include="devTest1.cpp" />
+    <ClCompile Include="devtest2.cpp" />
     <ClCompile Include="dfs.cpp" />
     <ClCompile Include="GreedyExample.cpp" />
     <ClCompile Include="Implement.cpp" />
